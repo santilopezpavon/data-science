@@ -1,0 +1,131 @@
+import ReadData from "./features/ReadData/ReadData";
+
+import { ReplaceDataFactory } from "./features/CleanData/ReplaceData"
+const fileHousePrice = "./../../machine-learning/data/hose-price-test.csv";
+const vgSales = "./../../machine-learning/data/vgsales.csv";
+const housing = "./../../machine-learning/data/housing.csv";
+const readData = new ReadData(housing, ",");
+readData.loadCSV(fileReaded);
+
+import {npFactory} from "./features/Calculus/np"
+
+
+function fileReaded(results: any) {
+    
+    const df = npFactory();
+    df.setData(results);
+    console.log('%c Oh my heavens! ', 'background: #222; color: #bada55');
+
+    /*df.head();
+    console.log("Describe");
+    df.describe();
+    df.infoAtributes();*/
+
+    //df.getCorrelations();
+
+
+    /*const correlations:any = df.calculateCorrelations();
+    let filterData = correlations.filter(item => {
+        if(item.correlation > 0.50 || item.correlation < -0.5) {
+            return true;
+        }
+    });
+    
+    df.getCustomData(filterData);*/
+    
+    // ReplaceDataFactory().removeDataWithErrors(results);
+
+    df.infoAtributes();
+
+    ReplaceDataFactory().removeAttributes(results, ["total_bedrooms"]);
+
+    df.setData(results);
+    df.infoAtributes();
+
+
+/*
+const value = 50;
+const log = Math.log(value);
+
+const reverse = Math.pow(Math.E, log);
+console.log(log);
+console.log(reverse);
+
+const operacion = (Math.log(50 * 2 + 20 * 3)) / Math.log(2) 
+console.log(Math.pow(Math.E, operacion));
+console.log((50 * 2 + 20 * 3));
+
+
+const valueScale = scale(5, 10,0);
+console.log(valueScale);
+
+const valueDescale = descale(valueScale, 10,0);
+console.log(valueDescale);
+
+
+
+const operacionReal = 50 * 2 + 20 * 3;
+console.log(operacionReal);
+
+
+
+const operacionRealNo = scale(50)* scale(2) + scale(20) * scale(3);
+console.log(operacionRealNo);
+console.log(descale(operacionRealNo));
+
+
+
+function scale(x) {
+    return (x - 0) / (100 - 0);
+}
+
+function descale(x) {
+    return x * (100 - 0) + 0;
+}
+
+*/
+
+   //  df.procesedData.attributes.dataFrame.getAllCols();
+
+
+   // df.procesedData.attributes.dataFrame.print(["name"]);
+    //console.log(df.procesedData.attributesSeparated);
+
+    //const describe = df.describe();
+    //describe.print();
+    //console.log(df.procesedData.attributes.data);
+
+    /* const infoData = new InfoData(results);    
+    const visualize = visualizeFactory(infoData);
+   // visualize.showItems(189, 295);
+    visualize.showDataTypes()
+    visualize.seeUnivarsMetrics(); */
+    
+    // visualize.showDataTypes()
+    //  visualize.seeUnivarsMetrics();
+   // visualize.showDataTypes()
+   // visualize.showSummary()
+    //visualize.showDataTypes()
+    //const uniques = infoData.unique(["2", "4", "1"]);
+    //console.log(uniques);
+
+/*
+    const cleanData = cleanDataFactory(infoData);
+    cleanData.removeAttributesAggresive(0.5)
+    cleanData.updateMissingDataNumberWithMedian();
+    cleanData.removeEntitiesWithErrors();*/
+
+
+   /* const cleanData = cleanDataFactory(infoData);
+    cleanData.removeAttributesAggresive(0.5)
+    cleanData.removeEntitiesWithErrors();
+
+    visualize.showSummary()*/
+
+
+
+
+    
+    //console.log(resultData);
+}
+
