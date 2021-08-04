@@ -35,7 +35,7 @@ export class DataFrame {
         }
 
         
-        const numCols = this.getNumCols(lim);
+        const numCols = this.getNumCols(lim, cols);
         let widthColumns = this.getWithCols(numCols); 
 
         for (const key in this.data[0]) {
@@ -88,11 +88,17 @@ export class DataFrame {
         console.log(namesCols);
     }
 
-    private getNumCols(lim) {
+    private getNumCols(lim, cols?) {
         let count = 0;
-        for (const key in this.data[0]) {
-            count++;
+
+        if(cols && cols.length > 0) {
+            count = cols.length;
+        } else {
+            for (const key in this.data[0]) {
+                count++;
+            }
         }
+        
 
         if(count > lim) {
             return lim;

@@ -3,6 +3,7 @@ import { DataFrameFactory, DataFrame } from "./../VisualizeData/DataFrame";
 import { TypeDataFactory, TypeData } from "./../InfoData/TypeData"
 import { univariableMetricsFactory, UnivariableMetrics } from "./../Statistics/UnivariableMetrics";
 import { correlationsFactory, Correlations } from "./../Relations/Correlations";
+import { re } from "mathjs";
 
 export class NP {
 
@@ -34,20 +35,31 @@ export class NP {
         },
         attributesSeparated: object,
         univarsMetrics: Array<any>,
-        correlations: Array<any>
+        correlations: Array<any>,
+        notNumberUnique: any
     }
 
 
 
     setData(data: Array<any>) {
         this.data = data;
+        this.update();
+    }
+
+    update() {
         this.typeDatasService.setData(this.data);
         this.preProcessData();
+    }
+
+    getNumData() {
+        return this.data.length;
     }
 
 
     private preProcessData() {
         const typeData: any[] = this.typeDatasService.getTypeDataObject();
+        
+
         this.procesedData = {
             items: {
                 data: this.data,
@@ -59,9 +71,15 @@ export class NP {
             },         
             attributesSeparated: this.getAllAtributesUnidimensional(typeData),
             univarsMetrics: [],
-            correlations:[]
+            correlations:[],
+            notNumberUnique: {}
         }
-    }
+
+        const uniques = this.getAllUniqueNotNumber(typeData);
+        this.procesedData.notNumberUnique = uniques;
+        this.typeDatasService.updateTypeNotNumericData(uniques);
+        
+    }   
 
     head(atributes = [], lim = 5) {
         return this.procesedData.items.dataFrame.print(atributes, lim);
@@ -135,10 +153,35 @@ export class NP {
         return values;
     }
 
+    private getAllUniqueNotNumber(typeData:any) {
+        let result = {};
+        for (const key in typeData) {
+            if(typeData[key].type === 'NotNumber') {
+                const unique = this.getUnique([typeData[key].name]);
+                result = {...result, ...unique}
+            }
+        }
+        return result;
+    }
 
-
+   
     getUnique(props: Array<string>) {
+        let obj = {};
+        const atributesSeparated = this.procesedData.attributesSeparated;
+        for (let i = 0; i < props.length; i++) {
+            obj[props[i]] = [];
+            const currentAttributeValues = atributesSeparated[props[i]].items;
+            let objectProps = {};
+            currentAttributeValues.map(function (value) {
+                value = value.trim().toLowerCase();
+                if(!objectProps.hasOwnProperty(value)) {
+                    objectProps[value] = null;
+                }
+            });
+            obj[props[i]] = Object.keys(objectProps);
+        }
 
+        return obj;
     }
 
     get(props: Array<string>) {

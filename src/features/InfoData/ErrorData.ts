@@ -1,3 +1,5 @@
+import {Attribute} from "./../Types/TypeProperties";
+
 export class ErrorData {
     private static instance: ErrorData
     
@@ -12,7 +14,10 @@ export class ErrorData {
         return ErrorData.instance
     }
 
-    missingValues:object = {
+    /**
+     * The list with the missing values.
+     */
+    private missingValues:object = {
         "N/A": 1,
         "NULL": 1,
         "EMPTY": 1,
@@ -22,10 +27,14 @@ export class ErrorData {
         "-": 1,
         "NAN": 1,
         " ": 1,
-        "": 1
-       
+        "": 1       
     }
 
+    /**
+     * Check if a value is missing.
+     * @param {any} value The value to check if is missing value. 
+     * @returns {boolean} 
+     */
     isMissing(value:any) {
         if(!isNaN(value) && value.length > 0) {
             return false;
@@ -33,7 +42,12 @@ export class ErrorData {
         return this.missingValues.hasOwnProperty(value.toUpperCase());
     }
 
-    calculateMissingValues(propertiesObject:any, data:Array<any>) {
+    /**
+     * Count the number and percent of data with errors by properties.
+     * @param {object} propertiesObject  The object of information about the properties in the data.
+     * @param {Array<any>} data The data array with all elements to check. 
+     */
+    calculateMissingValues(propertiesObject:object, data:Array<any>) {
         const totalDatos = data.length;
         for (const key in propertiesObject) {
             propertiesObject[key]["error"] = 0;

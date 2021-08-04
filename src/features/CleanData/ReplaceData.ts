@@ -29,19 +29,24 @@ export class ReplaceData {
         for (let i = length - 1; 0 <= i; i--) {
             for (const key in data[0]) {
                 if (this.errorDataService.isMissing(data[i][key])) {
-                    data.splice(i,1);
+                    data.splice(i, 1);
                     break;
                 }
             }
         }
     }
 
+    /**
+     * Remove atributes of content.
+     * @param data. An array with json objects with data.
+     * @param attributes. An array of the properties to erase.
+     */
     removeAttributes(data: Array<object>, attributes: Array<string>) {
         const length = data.length;
         for (let i = 0; i < length; i++) {
             for (let j = 0; j < attributes.length; j++) {
-                delete data[i][attributes[j]]               
-            }            
+                delete data[i][attributes[j]]
+            }
         }
     }
 }

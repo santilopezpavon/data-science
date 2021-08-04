@@ -4,7 +4,9 @@ import { ReplaceDataFactory } from "./features/CleanData/ReplaceData"
 const fileHousePrice = "./../../machine-learning/data/hose-price-test.csv";
 const vgSales = "./../../machine-learning/data/vgsales.csv";
 const housing = "./../../machine-learning/data/housing.csv";
-const readData = new ReadData(housing, ",");
+
+// const readData = new ReadData(housing, ",");
+const readData = new ReadData(vgSales, ",");
 readData.loadCSV(fileReaded);
 
 import {npFactory} from "./features/Calculus/np"
@@ -14,8 +16,17 @@ function fileReaded(results: any) {
     
     const df = npFactory();
     df.setData(results);
-    console.log('%c Oh my heavens! ', 'background: #222; color: #bada55');
-
+    console.log(df.getNumData());
+    df.infoAtributes();
+    df.head();
+    //console.log(df.procesedData.attributes.data);
+   /* df.head(["ocean_proximity"]);
+    const unique = df.getUnique(["ocean_proximity"]);
+    console.log("hola mundo");
+    console.log(df.procesedData.notNumberUnique);
+    console.log("fin"); */
+    //console.log(unique);
+    //console.log(df.procesedData.attributes.data);
     /*df.head();
     console.log("Describe");
     df.describe();
@@ -33,14 +44,20 @@ function fileReaded(results: any) {
     
     df.getCustomData(filterData);*/
     
-    // ReplaceDataFactory().removeDataWithErrors(results);
+     /*ReplaceDataFactory().removeDataWithErrors(results);
 
-    df.infoAtributes();
+    //df.infoAtributes();
 
-    ReplaceDataFactory().removeAttributes(results, ["total_bedrooms"]);
+   // ReplaceDataFactory().removeAttributes(results, ["total_bedrooms"]);
 
     df.setData(results);
-    df.infoAtributes();
+    const atributes:any = df.procesedData.attributes.data;
+    let filterData = atributes.filter(item => {
+        if(item.percentError > 0) {
+            return true;
+        }
+    });
+    console.log(filterData);*/
 
 
 /*
