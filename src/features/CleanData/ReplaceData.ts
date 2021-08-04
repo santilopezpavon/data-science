@@ -1,13 +1,11 @@
-declare var require: any
-
-const Math = require('mathjs')
 import { errorDataFactory, ErrorData } from "./../InfoData/ErrorData"
-
+import { NP } from "./../Calculus/np";
 
 export class ReplaceData {
 
     private static instance: ReplaceData
     errorDataService: ErrorData;
+    private df;
 
     constructor() {
         this.errorDataService = errorDataFactory();
@@ -20,11 +18,15 @@ export class ReplaceData {
         return ReplaceData.instance
     }
 
+    update(df: NP) {
+        this.df = df;
+    }
+
     /**
      * Remove any Data with an Error atribute value.
-     * @param data. An array with json objects with data.
      */
-    removeDataWithErrors(data: Array<object>) {
+    removeDataWithErrors() {
+        let data = this.df.data;
         const length = data.length;
         for (let i = length - 1; 0 <= i; i--) {
             for (const key in data[0]) {
@@ -34,24 +36,68 @@ export class ReplaceData {
                 }
             }
         }
+        this.df.setData(data);
     }
 
     /**
      * Remove atributes of content.
-     * @param data. An array with json objects with data.
      * @param attributes. An array of the properties to erase.
      */
-    removeAttributes(data: Array<object>, attributes: Array<string>) {
+    removeAttributes(attributes: Array<string>) {
+        let data = this.df.data;;
         const length = data.length;
         for (let i = 0; i < length; i++) {
             for (let j = 0; j < attributes.length; j++) {
                 delete data[i][attributes[j]]
             }
         }
+        this.df.setData(data);
     }
+
+    /**
+     * Update missing data of the attributes to pass by parameter with diferents modes.
+     * @param {Array<string>} attributes. An array of the properties to alter.
+     * @param {string} mode. The mode for replace missing data [mode || mean || median]
+     */
+    updateDataWithErrors(attributes: Array<string>, mode: string = "median") {
+        // Preparar las metricas de los atributos.
+        let valueForReplace = {};
+        for (let i = attributes.length - 1; i >= 0; i--) {
+            const element = attributes[i];
+            const dataReplace = this.df.procesedData.univarsMetrics.filter(function (item) {
+                if(item.name === element) {
+                    return true;
+                }
+            });
+            if(dataReplace && dataReplace.length > 0) {
+                valueForReplace[element] = dataReplace[0][mode];
+            } else {
+                console.error("No hay datos de " + element);     
+                attributes.splice(i, 1)      
+            }
+        }
+
+        let data = this.df.data;
+        for (let i = 0; i < data.length; i++) {
+            const currentData = data[i];
+            for (let j = 0; j < attributes.length; j++) {
+                const element = attributes[j];
+                if (this.errorDataService.isMissing(currentData[element])) {
+                    currentData[element] = "" + valueForReplace[element]
+                }                
+            }   
+            
+        }     
+       // this.df.update();
+    
+       this.df.setData(data);
+    }
+
 }
 
-export function ReplaceDataFactory() {
-    return ReplaceData.getInstance();
+export function ReplaceDataFactory(df: NP) {
+    const instancia = ReplaceData.getInstance();
+    instancia.update(df);
+    return instancia;
 }
 

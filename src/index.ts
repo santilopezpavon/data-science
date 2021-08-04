@@ -18,7 +18,19 @@ function fileReaded(results: any) {
     df.setData(results);
     console.log(df.getNumData());
     df.infoAtributes();
-    df.head();
+    df.describe();
+
+    const replaceService = ReplaceDataFactory(df);
+    replaceService.updateDataWithErrors(["Year", "Publisher"], "median");
+    df.describe();
+    /* const replaceService = ReplaceDataFactory(df);
+    replaceService.removeDataWithErrors();
+
+
+    console.log(df.getNumData());
+    df.infoAtributes();
+    df.describe();*/
+
     //console.log(df.procesedData.attributes.data);
    /* df.head(["ocean_proximity"]);
     const unique = df.getUnique(["ocean_proximity"]);

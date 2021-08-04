@@ -3,7 +3,6 @@ import { DataFrameFactory, DataFrame } from "./../VisualizeData/DataFrame";
 import { TypeDataFactory, TypeData } from "./../InfoData/TypeData"
 import { univariableMetricsFactory, UnivariableMetrics } from "./../Statistics/UnivariableMetrics";
 import { correlationsFactory, Correlations } from "./../Relations/Correlations";
-import { re } from "mathjs";
 
 export class NP {
 
@@ -118,6 +117,16 @@ export class NP {
         return this.procesedData.correlations;
     }
 
+    getUnique(props: Array<string>) {
+        let obj = {};
+        for (let i = 0; i < props.length; i++) {            
+            if(this.procesedData.notNumberUnique.hasOwnProperty(props[i])) {
+                obj[props[i]] = this.procesedData.notNumberUnique[props[i]];
+            }
+        }
+        return obj;
+    }
+
     
 
     private getAllAtributesUnidimensional(typeData) {
@@ -157,7 +166,7 @@ export class NP {
         let result = {};
         for (const key in typeData) {
             if(typeData[key].type === 'NotNumber') {
-                const unique = this.getUnique([typeData[key].name]);
+                const unique = this.calculateUnique([typeData[key].name]);
                 result = {...result, ...unique}
             }
         }
@@ -165,7 +174,7 @@ export class NP {
     }
 
    
-    getUnique(props: Array<string>) {
+    private calculateUnique(props: Array<string>) {
         let obj = {};
         const atributesSeparated = this.procesedData.attributesSeparated;
         for (let i = 0; i < props.length; i++) {
@@ -183,6 +192,8 @@ export class NP {
 
         return obj;
     }
+
+
 
     get(props: Array<string>) {
 
