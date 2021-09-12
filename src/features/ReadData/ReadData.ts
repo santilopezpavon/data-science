@@ -1,5 +1,9 @@
 declare function require(name: string);
 const csv = require("csvtojson");
+const converter = require('json-2-csv');
+const fs = require('fs');
+
+
 
 export default class ReadData {
 
@@ -21,4 +25,15 @@ export default class ReadData {
                 callback(jsonArrayObj);
             })
     }
+
+    saveCSV(jsonObject, name, callback: any) {
+        converter.json2csv(jsonObject, (err, csv) => {
+            if (err) {
+                console.log("Hola");
+                throw err;
+            }        
+            fs.writeFileSync(name + '.csv', csv);            
+            callback();
+        });
+    }        
 }

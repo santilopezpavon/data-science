@@ -9,7 +9,7 @@ export class NP {
     data: Array<any>
     typeDatasService: TypeData
     univariableMetricsService: UnivariableMetrics
-    correlationsService:Correlations
+    correlationsService: Correlations
 
     constructor() {
         this.typeDatasService = TypeDataFactory();
@@ -38,7 +38,20 @@ export class NP {
         notNumberUnique: any
     }
 
+    mergeJsons(jsonA, jsonB, keyUnion) {
+        jsonA.map(function (item) {
+            const currentValueKeyUnion = item[keyUnion];
+            const resultUnion = jsonB.find(function (itemResultSubmision) {
+                return itemResultSubmision[keyUnion] === currentValueKeyUnion
+            });
 
+            if (resultUnion) {
+                for (const key in resultUnion) {
+                    item[key] = resultUnion[key];
+                }
+            }
+        });
+    }
 
     setData(data: Array<any>) {
         this.data = data;
@@ -57,7 +70,7 @@ export class NP {
 
     private preProcessData() {
         const typeData: any[] = this.typeDatasService.getTypeDataObject();
-        
+
 
         this.procesedData = {
             items: {
@@ -67,18 +80,18 @@ export class NP {
             attributes: {
                 data: typeData,
                 dataFrame: DataFrameFactory(typeData)
-            },         
+            },
             attributesSeparated: this.getAllAtributesUnidimensional(typeData),
             univarsMetrics: [],
-            correlations:[],
+            correlations: [],
             notNumberUnique: {}
         }
 
         const uniques = this.getAllUniqueNotNumber(typeData);
         this.procesedData.notNumberUnique = uniques;
         this.typeDatasService.updateTypeNotNumericData(uniques);
-        
-    }   
+
+    }
 
     head(atributes = [], lim = 5) {
         return this.procesedData.items.dataFrame.print(atributes, lim);
@@ -89,7 +102,7 @@ export class NP {
         return DataFrameFactory(this.procesedData.univarsMetrics).print(atributes, lim);
     }
 
-    infoAtributes(atributes?, lim?) {        
+    infoAtributes(atributes?, lim?) {
         return this.procesedData.attributes.dataFrame.print(atributes, lim);
     }
 
@@ -108,7 +121,7 @@ export class NP {
         }
         return this.procesedData.univarsMetrics;
     }
-    
+
     calculateCorrelations() {
         this.calculateMetrics();
         if (this.procesedData.correlations.length == 0) {
@@ -119,22 +132,22 @@ export class NP {
 
     getUnique(props: Array<string>) {
         let obj = {};
-        for (let i = 0; i < props.length; i++) {            
-            if(this.procesedData.notNumberUnique.hasOwnProperty(props[i])) {
+        for (let i = 0; i < props.length; i++) {
+            if (this.procesedData.notNumberUnique.hasOwnProperty(props[i])) {
                 obj[props[i]] = this.procesedData.notNumberUnique[props[i]];
             }
         }
         return obj;
     }
 
-    
+
 
     private getAllAtributesUnidimensional(typeData) {
         const attributes: Array<any> = typeData;
         const errorDataService = this.typeDatasService.errorDataService;
 
         let values = {};
-        
+
         for (let index = 0; index < attributes.length; index++) {
             const property = attributes[index].name;
             const type = attributes[index].type;
@@ -162,18 +175,18 @@ export class NP {
         return values;
     }
 
-    private getAllUniqueNotNumber(typeData:any) {
+    private getAllUniqueNotNumber(typeData: any) {
         let result = {};
         for (const key in typeData) {
-            if(typeData[key].type === 'NotNumber') {
+            if (typeData[key].type === 'NotNumber') {
                 const unique = this.calculateUnique([typeData[key].name]);
-                result = {...result, ...unique}
+                result = { ...result, ...unique }
             }
         }
         return result;
     }
 
-   
+
     private calculateUnique(props: Array<string>) {
         let obj = {};
         const atributesSeparated = this.procesedData.attributesSeparated;
@@ -183,7 +196,7 @@ export class NP {
             let objectProps = {};
             currentAttributeValues.map(function (value) {
                 value = value.trim().toLowerCase();
-                if(!objectProps.hasOwnProperty(value)) {
+                if (!objectProps.hasOwnProperty(value)) {
                     objectProps[value] = null;
                 }
             });

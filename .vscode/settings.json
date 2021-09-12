@@ -1,0 +1,19 @@
+{
+    "files.associations": {
+        "*.scss": "html"
+    },
+    "markdown-preview-enhanced.codeBlockTheme": "darcula.css",
+    "markdown.styles": [
+        "style.css"
+    ],
+    "emeraldwalk.runonsave": {
+    
+        "commands": [           
+            {
+                "match": "\\.ts$",
+                "cmd": "npm run tsc"
+            }
+        ]
+    },
+    "window.zoomLevel": 3
+}
