@@ -12,7 +12,6 @@ import { npFactory } from "./features/Calculus/np"
 const fileResult = "./results.csv";
 
 // const readData = new ReadData(housingPrice, ",");
-console.log("entra"); 
 const readData = new ReadData(fileResult, ",");
 readData.loadCSV(fileReaded);
 function fileReaded(results: any) {
@@ -23,6 +22,13 @@ function fileReaded(results: any) {
             console.log("FIN");
         });        
     }); */
+
+
+    /**
+     * 
+     * 
+     * \Drupal::service("read_csv")->build();
+     */
 
 
 

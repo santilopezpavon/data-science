@@ -27,6 +27,7 @@ export class ReplaceData {
      */
     removeDataWithErrors() {
         let data = this.df.data;
+        
         const length = data.length;
         for (let i = length - 1; 0 <= i; i--) {
             for (const key in data[0]) {
@@ -36,7 +37,12 @@ export class ReplaceData {
                 }
             }
         }
-        this.df.setData(data);
+        if(data.length > 0) {
+            this.df.setData(data);        
+
+        } else {
+            console.error("La modificación afecta a todos los datos, no se ha podido realizar.");
+        }
     }
 
     /**
@@ -50,8 +56,9 @@ export class ReplaceData {
             for (let j = 0; j < attributes.length; j++) {
                 delete data[i][attributes[j]]
             }
-        }
-        this.df.setData(data);
+        } 
+        
+        this.df.setData(data);  
     }
 
     /**
@@ -85,12 +92,11 @@ export class ReplaceData {
                 if (this.errorDataService.isMissing(currentData[element])) {
                     currentData[element] = "" + valueForReplace[element]
                 }                
-            }   
-            
-        }     
-       // this.df.update();
-    
-       this.df.setData(data);
+            }               
+        }    
+        
+        this.df.setData(data);  
+       
     }
 
 }

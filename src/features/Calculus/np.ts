@@ -1,5 +1,4 @@
 import { DataFrameFactory, DataFrame } from "./../VisualizeData/DataFrame";
-// import { errorDataFactory } from "./../VisualizeData/DataFrame";
 import { TypeDataFactory, TypeData } from "./../InfoData/TypeData"
 import { univariableMetricsFactory, UnivariableMetrics } from "./../Statistics/UnivariableMetrics";
 import { correlationsFactory, Correlations } from "./../Relations/Correlations";
@@ -66,11 +65,12 @@ export class NP {
     getNumData() {
         return this.data.length;
     }
-
+    getData() {
+        return this.data;
+    }
 
     private preProcessData() {
         const typeData: any[] = this.typeDatasService.getTypeDataObject();
-
 
         this.procesedData = {
             items: {
@@ -92,6 +92,12 @@ export class NP {
         this.typeDatasService.updateTypeNotNumericData(uniques);
 
     }
+
+    getAttributes() {
+        return this.procesedData.attributes.data;
+    }
+
+    
 
     head(atributes = [], lim = 5) {
         return this.procesedData.items.dataFrame.print(atributes, lim);

@@ -30,7 +30,7 @@ export class TypeData {
 
     getTypeDataObject() {
         let typeData = {};
-        const firstData = this.data[0];
+        const firstData = this.data[0];  
         const keys = Object.keys(firstData);
         let id = 0;
         keys.forEach(key => {
