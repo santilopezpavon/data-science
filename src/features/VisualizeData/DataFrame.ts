@@ -105,7 +105,7 @@ export class DataFrame {
         }
         table += "</tbody></table>";
        
-        $$.html(table);
+        return table;
     }
 
     print(cols?: Array<string>, limItems?: number) {
