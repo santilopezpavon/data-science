@@ -2,6 +2,7 @@ declare function require(name: string);
 const panda = require("./features/Factories");
 const fs = require('fs');
 
+
 /**
  * Leer y guardar Ficheros.
  */
@@ -36,7 +37,7 @@ panda.read_csv(fileHousePrice, ",").then( function (results) {
     const df = panda.calc();
     df.setData(results);
     df.describe(["median", "kurtosis"]);
-
+   console.log(panda.dataFrameEnv);
 
  });
  

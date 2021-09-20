@@ -18,7 +18,7 @@ export class DataFrame {
         console.log("End See All Cols");
     }
 
-    print(cols?: Array<string>, limItems?: number) {
+    printForConsole(cols?: Array<string>, limItems?: number) {
         let customTable = {
             head: ["Index"],
             colWidths: [8]
@@ -34,9 +34,9 @@ export class DataFrame {
             existeCols = true;
         }
 
-        
+
         const numCols = this.getNumCols(lim, cols);
-        let widthColumns = this.getWithCols(numCols); 
+        let widthColumns = this.getWithCols(numCols);
 
         for (const key in this.data[0]) {
             if (existeCols === true && cols.indexOf(key) !== -1) {
@@ -88,19 +88,43 @@ export class DataFrame {
         console.log(namesCols);
     }
 
+    printForHtml(cols?: Array<string>, limItems?: number) {
+        let table = '<table class="table"><thead><tr>';
+        for (const key in this.data[0]) {
+            table += "<th>" + key + "</th>";
+        }
+        table += "</tr></thead><tbody>";
+
+        for (let index = 0; index < this.data.length; index++) {
+            const element = this.data[index];
+            table += "<tr>"
+            for (const key in this.data[0]) {
+                table += "<td>" + element[key] + "</td>";
+            }
+            table += "</tr>"         
+        }
+        table += "</tbody></table>";
+       
+        $$.html(table);
+    }
+
+    print(cols?: Array<string>, limItems?: number) {
+        this.printForHtml(cols, limItems);
+    }
+
     private getNumCols(lim, cols?) {
         let count = 0;
 
-        if(cols && cols.length > 0) {
+        if (cols && cols.length > 0) {
             count = cols.length;
         } else {
             for (const key in this.data[0]) {
                 count++;
             }
         }
-        
 
-        if(count > lim) {
+
+        if (count > lim) {
             return lim;
         }
         return count;
