@@ -1,7 +1,8 @@
-import { typeOf } from "mathjs";
+import { i, typeOf } from "mathjs";
 declare var $$;
 declare function require(name: string);
 const Table = require('cli-table');
+import { config } from "./../../config";
 
 export class DataFrame {
     data: Array<any>;
@@ -18,15 +19,69 @@ export class DataFrame {
         console.log("End See All Cols");
     }
 
-    printForConsole(cols?: Array<string>, limItems?: number) {
+    printForConsole(tableObject:any) {  
+        console.log(tableObject.toString());        
+    }
+
+    printForHtml(tableObject:any) {        
+        const head = tableObject.options.head;
+        const bodyLength = tableObject.length;
+
+        let tableHtml = '<table style="width:auto;" class="table"><thead><tr>';
+        
+        for (let i = 0; i < head.length; i++) {            
+            tableHtml += "<td>" + head[i] + "</td>";            
+        }
+
+        tableHtml += "</tr></thead><tbody>";
+        for (let index = 0; index < tableObject.length; index++) {
+            const element = tableObject[index];
+            tableHtml += "<tr>"
+            for (let j = 0; j < element.length; j++) {
+                tableHtml += "<td>" + element[j] + "</td>";
+            }
+            tableHtml += "</tr>"
+            
+        }
+        tableHtml += "</tbody></table>";
+        $$.html(tableHtml);        
+
+    }
+
+    print(cols?: Array<string>, limItems?: number) {
+        
+        const table = this.createTable(cols, limItems);
+        const tableObject = table.tableObject;
+        const limited = table.limited;
+
+        if (config.visualization === 'html') {
+            this.printForHtml(tableObject);
+        } else {
+            this.printForConsole(tableObject);
+        }
+
+        if (limited === true) {
+            console.log("LIMITED");
+        }
+
+        var namesCols = "";
+        for (const key in this.data[0]) {
+            namesCols += key + ", ";
+        }
+        console.log(namesCols);
+    }
+
+    private createTable(cols?: Array<string>, limItems?: number, defaultLim:number = 8) {
+        // Ini Custom Table.
         let customTable = {
             head: ["Index"],
             colWidths: [8]
         };
-        let lim = 8;
+        // Lim Cols.
+        let lim = defaultLim;
         let count = 0;
 
-        let limited = false;
+        let limited = false; // The table are limited?
 
         let existeCols = false;
         if (cols && cols.length > 0) {
@@ -57,6 +112,7 @@ export class DataFrame {
 
 
 
+
         let tableObject = new Table(customTable);
 
         if (limItems && limItems >= this.data.length) {
@@ -71,46 +127,15 @@ export class DataFrame {
             for (let j = 1; j < customTable.head.length; j++) {
                 const dataPrint = element[customTable.head[j]];
                 dataRow.push(dataPrint);
-
             }
 
             tableObject.push(dataRow);
         }
-        console.log(tableObject.toString());
-        if (limited === true) {
-            console.log("LIMITED");
-        }
 
-        var namesCols = "";
-        for (const key in this.data[0]) {
-            namesCols += key + ", ";
-        }
-        console.log(namesCols);
-    }
-
-    printForHtml(cols?: Array<string>, limItems?: number) {
-        let table = '<table class="table"><thead><tr>';
-        for (const key in this.data[0]) {
-            table += "<th>" + key + "</th>";
-        }
-        table += "</tr></thead><tbody>";
-
-        for (let index = 0; index < this.data.length; index++) {
-            const element = this.data[index];
-            table += "<tr>"
-            for (const key in this.data[0]) {
-                table += "<td>" + element[key] + "</td>";
-            }
-            table += "</tr>"         
-        }
-        table += "</tbody></table>";
-       
-        $$.html(table);
-
-    }
-
-    print(cols?: Array<string>, limItems?: number) {
-        this.printForHtml(cols, limItems);
+        return {
+            tableObject: tableObject,
+            limited: limited
+        };
     }
 
     private getNumCols(lim, cols?) {
