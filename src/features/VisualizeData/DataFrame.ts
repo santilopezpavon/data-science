@@ -1,5 +1,5 @@
 import { typeOf } from "mathjs";
-
+declare var $$;
 declare function require(name: string);
 const Table = require('cli-table');
 
@@ -105,7 +105,8 @@ export class DataFrame {
         }
         table += "</tbody></table>";
        
-        return table;
+        $$.html(table);
+
     }
 
     print(cols?: Array<string>, limItems?: number) {
