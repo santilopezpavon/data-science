@@ -9,6 +9,7 @@ const fs = require('fs');
  * This class is for Read or Load a CSV.
  */
 export class ReadData {
+    
     private static instance: ReadData
 
     public static getInstance(): ReadData {
@@ -27,8 +28,8 @@ export class ReadData {
      * The columns delimiter of the CSV file
      */
     delimiter: string = ";";
-   
-    setPath(path:string) {
+
+    setPath(path: string) {
         this.path = path;
     }
 
@@ -66,6 +67,6 @@ export class ReadData {
 }
 
 export function ReadDataFactory() {
-    const instancia:ReadData = ReadData.getInstance();
+    const instancia: ReadData = ReadData.getInstance();
     return instancia;
 }

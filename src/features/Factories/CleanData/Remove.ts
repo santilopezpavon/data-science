@@ -1,22 +1,26 @@
 import {ReplaceDataFactory} from "./../../CleanData/ReplaceData";
-import {NP} from "./../../Calculus/np";
+import {npFactory, NP} from "./../../Calculus/np";
 
-export function removeDataWithErrors(df: NP) {
+export function removeDataWithErrors() {
+    const df:NP = npFactory(); 
     const replaceData = ReplaceDataFactory(df);
     return replaceData.removeDataWithErrors();
 }
 
-export function removeAttributes(df: NP, attributes: Array<string>) {
+export function removeAttributes(attributes: Array<string>) {
+    const df:NP = npFactory(); 
     const replaceData = ReplaceDataFactory(df);
     return replaceData.removeAttributes(attributes);
 }
 
-export function updateDataWithErrors(df: NP, attributes: Array<string>, mode: string = "median") {
+export function updateDataWithErrors(attributes: Array<string>, mode: string = "median") {
+    const df:NP = npFactory(); 
     const replaceData = ReplaceDataFactory(df);
     return replaceData.updateDataWithErrors(attributes, mode);
 }
 
-export function removeAttributesWithMorePercentError(df: NP, percent = 0.5) {
+export function removeAttributesWithMorePercentError(percent = 0.5) {
+    const df:NP = npFactory(); 
     const attributes:Array<any> = df.getAttributes();
 
     let attributesForRemove = [];

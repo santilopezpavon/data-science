@@ -1,4 +1,3 @@
-import { i, typeOf } from "mathjs";
 declare var $$;
 declare function require(name: string);
 const Table = require('cli-table');
@@ -17,35 +16,6 @@ export class DataFrame {
             console.log(key);
         }
         console.log("End See All Cols");
-    }
-
-    printForConsole(tableObject:any) {  
-        console.log(tableObject.toString());        
-    }
-
-    printForHtml(tableObject:any) {        
-        const head = tableObject.options.head;
-        const bodyLength = tableObject.length;
-
-        let tableHtml = '<table style="width:auto;" class="table"><thead><tr>';
-        
-        for (let i = 0; i < head.length; i++) {            
-            tableHtml += "<td>" + head[i] + "</td>";            
-        }
-
-        tableHtml += "</tr></thead><tbody>";
-        for (let index = 0; index < tableObject.length; index++) {
-            const element = tableObject[index];
-            tableHtml += "<tr>"
-            for (let j = 0; j < element.length; j++) {
-                tableHtml += "<td>" + element[j] + "</td>";
-            }
-            tableHtml += "</tr>"
-            
-        }
-        tableHtml += "</tbody></table>";
-        $$.html(tableHtml);        
-
     }
 
     print(cols?: Array<string>, limItems?: number) {
@@ -70,6 +40,37 @@ export class DataFrame {
         }
         console.log(namesCols);
     }
+
+    private printForConsole(tableObject:any) {  
+        console.log(tableObject.toString());        
+    }
+
+    private printForHtml(tableObject:any) {        
+        const head = tableObject.options.head;
+        const bodyLength = tableObject.length;
+
+        let tableHtml = '<table style="width:auto;" class="table"><thead><tr>';
+        
+        for (let i = 0; i < head.length; i++) {            
+            tableHtml += "<td>" + head[i] + "</td>";            
+        }
+
+        tableHtml += "</tr></thead><tbody>";
+        for (let index = 0; index < tableObject.length; index++) {
+            const element = tableObject[index];
+            tableHtml += "<tr>"
+            for (let j = 0; j < element.length; j++) {
+                tableHtml += "<td>" + element[j] + "</td>";
+            }
+            tableHtml += "</tr>"
+            
+        }
+        tableHtml += "</tbody></table>";
+        $$.html(tableHtml);        
+
+    }
+
+    
 
     private createTable(cols?: Array<string>, limItems?: number, defaultLim:number = 8) {
         // Ini Custom Table.

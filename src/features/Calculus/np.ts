@@ -10,11 +10,21 @@ export class NP {
     univariableMetricsService: UnivariableMetrics
     correlationsService: Correlations
 
+    private static instance: NP
+
     constructor() {
         this.typeDatasService = TypeDataFactory();
         this.univariableMetricsService = univariableMetricsFactory();
         this.correlationsService = correlationsFactory();
     }
+
+    public static getInstance(): NP {
+        if (!NP.instance) {
+            NP.instance = new NP()
+        }
+        return NP.instance
+    }
+
 
     procesedData: {
         items: {
@@ -65,6 +75,7 @@ export class NP {
     getNumData() {
         return this.data.length;
     }
+
     getData() {
         return this.data;
     }
@@ -97,20 +108,11 @@ export class NP {
         return this.procesedData.attributes.data;
     }
 
-    
-
-    head(atributes = [], lim = 5) {
-        return this.procesedData.items.dataFrame.print(atributes, lim);
-    }
-
-    describe(atributes?, lim?) {
+    getUnivarsMetrics() {
         this.calculateMetrics();
-        return DataFrameFactory(this.procesedData.univarsMetrics).print(atributes, lim);
+        return this.procesedData.univarsMetrics;
     }
-
-    infoAtributes(atributes?, lim?) {
-        return this.procesedData.attributes.dataFrame.print(atributes, lim);
-    }
+    
 
     getCorrelations(atributes?) {
         this.calculateCorrelations();
@@ -220,5 +222,6 @@ export class NP {
 }
 
 export function npFactory() {
-    return new NP();
+    const instancia = NP.getInstance();
+    return instancia;
 }
