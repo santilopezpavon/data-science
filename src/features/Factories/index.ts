@@ -5,11 +5,17 @@ export {
 export {
     setData, 
     getData,
+    getInfo,
+    getDescribe,
     head,
     info,
     describe,
-    getUnique
+    getUnique,
+    correlations,
+
 } from "./Data/Data"
+
+
 export {
     removeDataWithErrors, 
     removeAttributes, 

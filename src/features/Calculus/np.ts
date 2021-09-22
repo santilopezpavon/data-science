@@ -108,6 +108,10 @@ export class NP {
         return this.procesedData.attributes.data;
     }
 
+    getAttibutesSeparated() {
+        return this.procesedData.attributesSeparated;
+    }
+
     getUnivarsMetrics() {
         this.calculateMetrics();
         return this.procesedData.univarsMetrics;
@@ -116,7 +120,7 @@ export class NP {
 
     getCorrelations(atributes?) {
         this.calculateCorrelations();
-        return DataFrameFactory(this.procesedData.correlations).print(atributes);
+        return this.procesedData.correlations;
     }
 
     getCustomData(data, atributes?) {
@@ -136,6 +140,22 @@ export class NP {
             this.procesedData.correlations = this.correlationsService.getCorrelations(this.procesedData)
         }
         return this.procesedData.correlations;
+    }
+
+    getCorrelation(propA, propB) {
+        const corr = this.calculateCorrelations();
+        if(propA === propB) {
+            return 1;
+        }
+        for (let index = 0; index < corr.length; index++) {
+            if(
+                (corr[index].propA === propA && corr[index].propB === propB)  ||
+                (corr[index].propA === propB && corr[index].propB === propA)
+            ) {
+                return corr[index].correlation;
+            }            
+        }
+        return "NA";
     }
 
     getUnique(props: Array<string>) {

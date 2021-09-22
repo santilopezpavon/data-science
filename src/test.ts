@@ -22,10 +22,11 @@ const housing = "./../../machine-learning/data/housing.csv";
 panda.read_csv(housing, ",").then(function (results) {
   // const df = panda.calc();
    panda.setData(results);
-   console.log(panda.getData());
-   panda.info();
-
-   panda.getUnique(["ocean_proximity"]);
+   //panda.describe();
+   panda.correlations([ "median_house_value"]);
+  // console.log(panda.getData());
+   //panda.info();
+   //panda.getUnique(["ocean_proximity"]);
    //console.log(df.getData());
    //panda.removeAttributes(["PoolQC"]);
    /*df.infoAtributes();
