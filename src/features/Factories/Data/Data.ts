@@ -62,6 +62,16 @@ export function correlations(atributes = []) {
     const np = npFactory(); 
     const correlations = np.getCorrelations(atributes)
     if(atributes.length === 0) {
+        correlations.sort(function (a, b) {
+            if (a.correlation > b.correlation) {
+              return -1;
+            }
+            if (a.correlation < b.correlation) {
+              return 1;
+            }
+            // a must be equal to b
+            return 0;
+          });
         return DataFrameFactory(correlations).print(atributes);
     } else {
         let response = [];
@@ -80,23 +90,6 @@ export function correlations(atributes = []) {
             }
         });
         return DataFrameFactory(response).print();
-        //console.log(np.getCorrelation("median_house_value", "median_house_value"));
-        // return DataFrameFactory(response).print(["prop"]);
-       // console.log(attributes);
-        /*atributes.forEach(function (attr) {
-
-        }*/
-        /*let response = [];
-        atributes.forEach(function (attr) {
-            for (let i = 0; i < correlations.length; i++) {
-                const element = correlations[i];
-                if(element.propA === attr) {
-
-                } else if(element.propB === attr) {
-
-                }
-                
-            }
-        });*/
+  
     }
 }   
