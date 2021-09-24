@@ -22,8 +22,6 @@ export {
 } from "./CleanData/Errors"
 
 export {
-    removeDataWithErrors, 
+    replaceMissingAtipicalAttributes, 
     removeAttributes, 
-    updateDataWithErrors,
-    removeAttributesWithMorePercentError
 } from "./CleanData/Remove"

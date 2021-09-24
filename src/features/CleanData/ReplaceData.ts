@@ -5,7 +5,6 @@ export class ReplaceData {
 
     private static instance: ReplaceData
     errorDataService: ErrorData;
-    private df;
 
     constructor() {
         this.errorDataService = errorDataFactory();
@@ -16,41 +15,14 @@ export class ReplaceData {
             ReplaceData.instance = new ReplaceData()
         }
         return ReplaceData.instance
-    }
-
-    update(df: NP) {
-        this.df = df;
-    }
-
-    /**
-     * Remove any Data with an Error atribute value.
-     */
-    removeDataWithErrors() {
-        let data = this.df.data;
-        
-        const length = data.length;
-        for (let i = length - 1; 0 <= i; i--) {
-            for (const key in data[0]) {
-                if (this.errorDataService.isMissing(data[i][key])) {
-                    data.splice(i, 1);
-                    break;
-                }
-            }
-        }
-        if(data.length > 0) {
-            this.df.setData(data);        
-
-        } else {
-            console.error("La modificación afecta a todos los datos, no se ha podido realizar.");
-        }
-    }
+    }   
 
     /**
      * Remove atributes of content.
      * @param {Array<string>} attributes. An array of the properties to erase.
      */
     removeAttributes(attributes: Array<string>) {
-        let data = this.df.data;;
+        let data = npFactory().data;;
         const length = data.length;
         for (let i = 0; i < length; i++) {
             for (let j = 0; j < attributes.length; j++) {
@@ -58,53 +30,97 @@ export class ReplaceData {
             }
         } 
         
-        this.df.setData(data);  
+        npFactory().setData(data);  
     }
 
+
     /**
-     * Update missing data of the attributes to pass by parameter with diferents modes.
-     * @param {Array<string>} attributes. An array of the properties to alter.
-     * @param {string} mode. The mode for replace missing data [mode || mean || median]
+     * Replace data of the entities.
+     * @param {Array} attributes 
      */
-    updateDataWithErrors(attributes: Array<string>, mode: string = "median") {
-        // Preparar las metricas de los atributos.
-        let valueForReplace = {};
-        for (let i = attributes.length - 1; i >= 0; i--) {
-            const element = attributes[i];
-            const dataReplace = this.df.procesedData.univarsMetrics.filter(function (item) {
-                if(item.name === element) {
-                    return true;
-                }
-            });
-            if(dataReplace && dataReplace.length > 0) {
-                valueForReplace[element] = dataReplace[0][mode];
-            } else {
-                console.error("No hay datos de " + element);     
-                attributes.splice(i, 1)      
-            }
+    replaceMissingAtipicalAttributes(attributes: Array<{
+        attribute:string,
+        mode:string // mean, median, mode, lim, remove
+        type:string // atipical || missing || all
+    }>){
+        const data = npFactory().getData();        
+        const length = data.length;
+
+        console.log("Init num data " + length);
+
+        // Verificar dato existe.
+
+        for (let i = length - 1; 0 <= i; i--) {
+            const currentData:any = data[i];
+            for (let j = 0; j < attributes.length; j++) {
+                const currentAttribute:any = attributes[j];
+                if(this.alterEntity(currentData, currentAttribute)) {
+                    this.actionEntity(data, i, currentAttribute)
+                }               
+            }            
+        }     
+        
+        if(data.length > 0) {
+            npFactory().setData(data);
+            console.log("End num data " + data.length);
         }
 
-        let data = this.df.data;
-        for (let i = 0; i < data.length; i++) {
-            const currentData = data[i];
-            for (let j = 0; j < attributes.length; j++) {
-                const element = attributes[j];
-                if (this.errorDataService.isMissing(currentData[element])) {
-                    currentData[element] = "" + valueForReplace[element]
-                }                
-            }               
-        }    
         
-        this.df.setData(data);  
-       
+    }
+
+    private actionEntity(entityArray:Array<any>, pos:number, attribute:{
+        attribute:string,
+        mode:string // mean, median, mode, lim, remove
+        type:string // atipical || missing || all
+    }) {
+        const metrics = npFactory().getUnivarsMetricsByAttributeName(attribute.attribute);
+
+        switch (attribute.mode) {
+            case "remove":
+                entityArray.splice(pos, 1);
+                break;
+            case "lim":
+                if(entityArray[pos][attribute.attribute] < metrics.tukeymin) {
+                    entityArray[pos][attribute.attribute] = "" + metrics.tukeymin;
+                } else if(entityArray[pos][attribute.attribute] > metrics.tukeymax) {
+                    entityArray[pos][attribute.attribute] =  "" + metrics.tukeymax;
+                }
+                break;
+            case "median":
+                entityArray[pos][attribute.attribute] = "" + metrics.median;
+                break;
+            case "mode":
+                entityArray[pos][attribute.attribute] = "" + metrics.mode;
+                break;
+            case "mean":
+                entityArray[pos][attribute.attribute] = "" + metrics.mean;
+                break;
+            default:
+                break;
+        }
+
+    }
+
+    private alterEntity(entity:any, attribute:{
+        attribute:string,
+        mode:string // mean, median, mode, lim, remove
+        type:string // atipical || missing || all
+    }) {
+        switch (attribute.type) {
+            case "atipical":
+                return this.errorDataService.isAtipical(attribute.attribute, entity[attribute.attribute]);
+            case "missing":
+                return this.errorDataService.isMissing(entity[attribute.attribute]);
+            case "all":
+                return this.errorDataService.isMissing(entity[attribute.attribute]) || this.errorDataService.isAtipical(attribute.attribute, entity[attribute.attribute]);
+            default:
+                return false;
+        }
     }
 
 }
 
 export function ReplaceDataFactory() {
-    const instancia = ReplaceData.getInstance();
-    const df:NP = npFactory();
-    instancia.update(df);
-    return instancia;
+    return ReplaceData.getInstance();
 }
 

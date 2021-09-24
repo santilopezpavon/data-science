@@ -4,10 +4,6 @@ import { NP, npFactory } from "./../Calculus/np";
 export class ErrorData {
     private static instance: ErrorData
     
-    private constructor() {
-
-    }
-
     public static getInstance(): ErrorData {
         if (!ErrorData.instance) {
             ErrorData.instance = new ErrorData()
@@ -45,7 +41,21 @@ export class ErrorData {
 
     isAtipical(attr:string, value:any) {
         const np = npFactory();
-        return np.isAtipicalData(attr, value);        
+        np.calculateMetrics();
+        const univars = np.procesedData.univarsMetrics;
+
+        const propCurrent = univars.find(function (item) {
+            return item.name === attr;
+        });
+        
+        if (
+            propCurrent &&
+            propCurrent.tukeyminextreme <= value &&
+            propCurrent.tukeymaxextreme >= value
+        ) {
+            return false;
+        }
+        return true;
     }
 
     /**

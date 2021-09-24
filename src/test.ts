@@ -3,6 +3,8 @@ declare var process;
 const panda = require("./features/Factories");
 const fs = require('fs');
 
+import {ReplaceDataFactory} from "./features/CleanData/ReplaceData"
+
 
 /**
  * Leer y guardar Ficheros.
@@ -23,8 +25,43 @@ const housing = "./../../machine-learning/data/housing.csv";
 panda.read_csv(housing, ",").then(function (results) {
   // const df = panda.calc();
    panda.setData(results);
+   //panda.info();
    //console.log(panda.getInfo());
-   panda.correlations(["median_house_value"]);
+   ///panda.correlations(["median_house_value"]);
+   //panda.describe(["name", "atipicdataextreme", "min", "max", "tukeyminextreme", "tukeymaxextreme"]);
+   const ReplaceDataFactoryService = ReplaceDataFactory();
+   panda.correlations(["median_house_value"]); 
+
+  ReplaceDataFactoryService.replaceMissingAtipicalAttributes([
+   
+    {
+      attribute: "median_income",
+      mode: "lim",
+      type: "atipical"
+    },
+    {
+      attribute: "total_bedrooms",
+      mode: "median",
+      type: "all"
+    },
+  ]);
+  //panda.info();
+  //panda.describe(["name", "atipicdataextreme", "min", "max", "tukeyminextreme", "tukeymaxextreme"]);
+  panda.correlations(["median_house_value"]); 
+  /**
+    * Eliminar entidades que contengan errores
+    * Eliminar entidades que contengan valores atipicos
+    * 
+    * Eliminar atributos de forma libre
+    * 
+    * Sustituir valores de atributos que contenga errores
+    * Sustituir valores de atributos que contengan valores atipicos
+    *   Media
+    *   Mode
+    *   Mediana
+    *   Limite 
+    * 
+    */
    //panda.head(["median_income", "median_house_value"], 20);
    // panda.describe(["name","interv_1", "interv_2", "interv_3"]);  
     //panda.describe(["name","mean", "first", "median", "third", "min", "max"]);  

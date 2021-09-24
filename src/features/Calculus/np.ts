@@ -116,6 +116,16 @@ export class NP {
         return this.procesedData.univarsMetrics;
     }
 
+    getUnivarsMetricsByAttributeName(attributeName:string) {
+        this.calculateMetrics();
+        return this.procesedData.univarsMetrics.find(item => {
+            if(item.name === attributeName) {
+                return true;
+            }
+        });
+
+    }
+
 
     getCorrelations(atributes?) {
         
@@ -143,22 +153,7 @@ export class NP {
         }
         return this.procesedData.correlations;
     }
-
-    isAtipicalData(attr: string, value: any) {
-        this.calculateMetrics();
-        const univars = this.procesedData.univarsMetrics;
-        const propCurrent = univars.filter(function (item) {
-            return item.name === attr;
-        });
-        if (
-            propCurrent[0].tukeyminextreme <= value &&
-            propCurrent[0].tukeymaxextreme >= value
-        ) {
-            return false;
-        }
-        return true;
-    }
-
+   
     getCorrelation(propA, propB) {
         const corr = this.calculateCorrelations();
         if (propA === propB) {
@@ -255,6 +250,5 @@ export class NP {
 }
 
 export function npFactory() {
-    const instancia = NP.getInstance();
-    return instancia;
+    return NP.getInstance();
 }
