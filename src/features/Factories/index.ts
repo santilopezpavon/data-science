@@ -15,6 +15,10 @@ export {
 
 } from "./Data/Data"
 
+export {
+    isMissing,
+    isAtipicalData
+} from "./CleanData/Errors"
 
 export {
     removeDataWithErrors, 

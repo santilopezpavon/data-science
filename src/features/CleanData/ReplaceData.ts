@@ -1,5 +1,5 @@
 import { errorDataFactory, ErrorData } from "./../InfoData/ErrorData"
-import { NP } from "./../Calculus/np";
+import { NP, npFactory } from "./../Calculus/np";
 
 export class ReplaceData {
 
@@ -47,7 +47,7 @@ export class ReplaceData {
 
     /**
      * Remove atributes of content.
-     * @param attributes. An array of the properties to erase.
+     * @param {Array<string>} attributes. An array of the properties to erase.
      */
     removeAttributes(attributes: Array<string>) {
         let data = this.df.data;;
@@ -101,8 +101,9 @@ export class ReplaceData {
 
 }
 
-export function ReplaceDataFactory(df: NP) {
+export function ReplaceDataFactory() {
     const instancia = ReplaceData.getInstance();
+    const df:NP = npFactory();
     instancia.update(df);
     return instancia;
 }

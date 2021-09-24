@@ -1,6 +1,8 @@
 import {npFactory} from "../../Calculus/np";
 import {DataFrameFactory} from "../../VisualizeData/DataFrame";
 
+
+
 /**
  * Set data for do operations.
  * @param {Array<any>} data the array of json data objects.

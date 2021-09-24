@@ -58,7 +58,9 @@ export class Correlations {
         procesedData.items.data.map(a => {
             if (
                 !this.errorDataService.isMissing(a[propertyA]) && 
-                !this.errorDataService.isMissing(a[propertyB]) 
+                !this.errorDataService.isMissing(a[propertyB]) &&
+                !this.errorDataService.isAtipical(propertyB, a[propertyB])  && 
+                !this.errorDataService.isAtipical(propertyA, a[propertyA]) 
             ) {
                 objectProcesed.propertyA.push(parseFloat(a[propertyA]));
                 objectProcesed.propertyB.push(parseFloat(a[propertyB]));

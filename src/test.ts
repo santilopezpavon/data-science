@@ -1,4 +1,5 @@
 declare function require(name: string);
+declare var process;
 const panda = require("./features/Factories");
 const fs = require('fs');
 
@@ -6,10 +7,10 @@ const fs = require('fs');
 /**
  * Leer y guardar Ficheros.
  */
-const fileHousePrice = "./../../machine-learning/data/hose-price-test.csv";
+/*const fileHousePrice = "./../../machine-learning/data/hose-price-test.csv";
 panda.read_csv(fileHousePrice).then(function (res) {
    // console.log(res);
-});
+});*/
 
 //const jsonObject = {"saludo": "hola"};
 //panda.save_csv("./../file", jsonObject);
@@ -21,11 +22,54 @@ const housing = "./../../machine-learning/data/housing.csv";
 
 panda.read_csv(housing, ",").then(function (results) {
   // const df = panda.calc();
+  memoryCalculate();
+
    panda.setData(results);
+   memoryCalculate();
    //console.log(panda.getInfo());
-   //panda.correlations();
-   panda.head(["total_bedrooms", "households", "total_rooms"], 15);
-  // console.log(panda.getData());
+   //panda.correlations(["median_house_value"]);
+   //panda.head(["median_income", "median_house_value"], 20);
+   // panda.describe(["name","interv_1", "interv_2", "interv_3"]);  
+    //panda.describe(["name","mean", "first", "median", "third", "min", "max"]);  
+    //panda.describe(["name", "tukeyminextreme", "tukeymaxextreme", "min", "max", "atipicdataextreme"]);  
+    
+    panda.describe(["name", "tukeyminextreme", "tukeymaxextreme", "min", "max"]);  
+    memoryCalculate();
+    panda.correlations(["median_house_value"]);
+    memoryCalculate();
+
+/*
+    let data = panda.getData();
+    data.map(function (item) {
+      if(
+        !panda.isMissing(item, "median_income") && 
+        panda.isAtipicalData("median_income", item["median_income"])
+      ) {
+        const value = item.median_income;
+        //console.log(value);
+        if(value > 1000){
+          item.median_income = (item.median_income / 1000) + ""
+        }
+      } 
+    })
+
+
+    panda.setData(data);
+    panda.describe(["name", "tukeyminextreme", "tukeymaxextreme", "min", "max"]);  
+    panda.correlations(["median_house_value"]);*/
+  //console.log(panda.isAtipicalData("median_income", 2));
+
+
+
+    /*const data = panda.getData();
+    data.map(function (item) {
+      if(
+        !panda.isMissing(item, "median_income")
+      ) {
+
+      }
+    });*/
+    // console.log(panda.getData());
    //panda.info();
    //panda.getUnique(["ocean_proximity"]);
    //console.log(df.getData());
@@ -52,3 +96,10 @@ panda.read_csv(housing, ",").then(function (results) {
   console.log(panda.dataFrameEnv);*/
 
 });
+
+
+
+function memoryCalculate() {
+  const used = process.memoryUsage().heapUsed / 1024 / 1024;
+  console.log(`The script uses approximately ${Math.round(used * 100) / 100} MB`);
+}

@@ -26,10 +26,7 @@ export class UnivariableMetrics {
             if (currentProp.type === 'Number') {
                 let prepareCalculates: object = {};
                 prepareCalculates["name"] = property;
-
-                //console.time('sorted');
                 const sorted = this.sortValues(currentProp.items);
-                //console.timeEnd('sorted')
                 
                 const iqr = this.iqr(sorted);
                 const max = sorted[sorted.length - 1];
@@ -54,7 +51,17 @@ export class UnivariableMetrics {
                 //console.time('sorted');
                 prepareCalculates["skewness"] = skewness(sorted);
                 prepareCalculates["kurtosis"] = kurtosis(sorted);
-               // console.timeEnd('sorted')
+
+                // Vallas de Tukey
+                prepareCalculates["tukeymin"] = iqr.primer + (-1.5 * iqr.rango);
+                prepareCalculates["tukeymax"] = iqr.tercer +  (1.5 * iqr.rango);
+                prepareCalculates["tukeyminextreme"] = iqr.primer + (-3* iqr.rango);
+                prepareCalculates["tukeymaxextreme"] = iqr.tercer +  (3 * iqr.rango);
+
+                prepareCalculates["atipicdata"] = prepareCalculates["tukeyminextreme"] > min ||  prepareCalculates["tukeymaxextreme"] < max;
+                prepareCalculates["atipicdataextreme"] = prepareCalculates["tukeyminextreme"] > min ||  prepareCalculates["tukeymaxextreme"] < max;
+
+                // console.timeEnd('sorted')
 
                 calculates.push(prepareCalculates);
 

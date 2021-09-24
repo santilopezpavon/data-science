@@ -1,4 +1,5 @@
 import {Attribute} from "./../Types/TypeProperties";
+import { NP, npFactory } from "./../Calculus/np";
 
 export class ErrorData {
     private static instance: ErrorData
@@ -40,6 +41,11 @@ export class ErrorData {
             return false;
         }
         return this.missingValues.hasOwnProperty(value.toUpperCase());
+    }
+
+    isAtipical(attr:string, value:any) {
+        const np = npFactory();
+        return np.isAtipicalData(attr, value);        
     }
 
     /**

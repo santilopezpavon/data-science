@@ -142,6 +142,21 @@ export class NP {
         return this.procesedData.correlations;
     }
 
+    isAtipicalData(attr:string, value:any) {
+        this.calculateMetrics();
+        const univars = this.procesedData.univarsMetrics;
+        const propCurrent = univars.filter(function (item) {
+            return item.name === attr;
+        });
+        if(
+            propCurrent[0].tukeyminextreme <= value && 
+            propCurrent[0].tukeymaxextreme >= value        
+        ) {
+            return false;
+        }
+        return true;
+    }
+
     getCorrelation(propA, propB) {
         const corr = this.calculateCorrelations();
         if(propA === propB) {
@@ -232,12 +247,6 @@ export class NP {
         }
 
         return obj;
-    }
-
-
-
-    get(props: Array<string>) {
-
     }
 }
 
