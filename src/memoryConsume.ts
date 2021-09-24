@@ -1,3 +1,4 @@
+declare var process;
 const show = true;
 export function  memoryCalculate(pointName) {
     if(show === true ){
