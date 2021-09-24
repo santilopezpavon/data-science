@@ -1,13 +1,14 @@
 import {errorDataFactory} from "./../../InfoData/ErrorData";
-import {npFactory} from "./../../Calculus/np";
-
-const np = npFactory();
 const errorService = errorDataFactory();
 
-export function isMissing(item, attr) {
-    return errorService.isMissing(item[attr]);
+export function isMissing(value) {
+    return errorService.isMissing(value);
 }
 
-export function isAtipicalData(attr, value) {
-    return np.isAtipicalData(attr, value);
+export function isAtipicalData(attr:string, value:any) {
+    return errorService.isAtipical(attr, value);
+}
+
+export function isErrorData(attr:string, value:any) {
+    return isMissing(value) || isAtipicalData(attr, value);
 }

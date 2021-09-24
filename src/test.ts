@@ -22,21 +22,18 @@ const housing = "./../../machine-learning/data/housing.csv";
 
 panda.read_csv(housing, ",").then(function (results) {
   // const df = panda.calc();
-  memoryCalculate();
-
    panda.setData(results);
-   memoryCalculate();
    //console.log(panda.getInfo());
-   //panda.correlations(["median_house_value"]);
+   panda.correlations(["median_house_value"]);
    //panda.head(["median_income", "median_house_value"], 20);
    // panda.describe(["name","interv_1", "interv_2", "interv_3"]);  
     //panda.describe(["name","mean", "first", "median", "third", "min", "max"]);  
     //panda.describe(["name", "tukeyminextreme", "tukeymaxextreme", "min", "max", "atipicdataextreme"]);  
     
-    panda.describe(["name", "tukeyminextreme", "tukeymaxextreme", "min", "max"]);  
-    memoryCalculate();
+    /*panda.describe(["name", "tukeyminextreme", "tukeymaxextreme", "min", "max"]);  
+    memoryCalculate("describe");
     panda.correlations(["median_house_value"]);
-    memoryCalculate();
+    memoryCalculate("correlations");*/
 
 /*
     let data = panda.getData();
@@ -97,9 +94,3 @@ panda.read_csv(housing, ",").then(function (results) {
 
 });
 
-
-
-function memoryCalculate() {
-  const used = process.memoryUsage().heapUsed / 1024 / 1024;
-  console.log(`The script uses approximately ${Math.round(used * 100) / 100} MB`);
-}

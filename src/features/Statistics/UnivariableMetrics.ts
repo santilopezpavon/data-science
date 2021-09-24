@@ -1,5 +1,6 @@
 import { mean, std } from "mathjs";
 declare var require: any
+import { memoryCalculate } from "./../../memoryConsume"
 
 const Math = require('mathjs')
 const skewness = require('compute-skewness');
@@ -31,7 +32,6 @@ export class UnivariableMetrics {
                 const iqr = this.iqr(sorted);
                 const max = sorted[sorted.length - 1];
                 const min = sorted[0];
-
                 prepareCalculates["mean"] = this.getMean(sorted);
                 prepareCalculates["median"] = this.getMedian(sorted);
                 prepareCalculates["mode"] = this.getMode(sorted);
@@ -60,11 +60,9 @@ export class UnivariableMetrics {
 
                 prepareCalculates["atipicdata"] = prepareCalculates["tukeyminextreme"] > min ||  prepareCalculates["tukeymaxextreme"] < max;
                 prepareCalculates["atipicdataextreme"] = prepareCalculates["tukeyminextreme"] > min ||  prepareCalculates["tukeymaxextreme"] < max;
-
                 // console.timeEnd('sorted')
 
                 calculates.push(prepareCalculates);
-
 
             }
         }

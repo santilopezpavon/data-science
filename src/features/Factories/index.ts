@@ -17,7 +17,8 @@ export {
 
 export {
     isMissing,
-    isAtipicalData
+    isAtipicalData,
+    isErrorData
 } from "./CleanData/Errors"
 
 export {

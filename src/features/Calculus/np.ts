@@ -2,6 +2,7 @@ import { DataFrameFactory, DataFrame } from "./../VisualizeData/DataFrame";
 import { TypeDataFactory, TypeData } from "./../InfoData/TypeData"
 import { univariableMetricsFactory, UnivariableMetrics } from "./../Statistics/UnivariableMetrics";
 import { correlationsFactory, Correlations } from "./../Relations/Correlations";
+import { memoryCalculate } from "./../../memoryConsume"
 
 export class NP {
 
@@ -29,7 +30,7 @@ export class NP {
     procesedData: {
         items: {
             data: Array<any>,
-            dataFrame: DataFrame
+            //dataFrame: DataFrame
         },
         attributes: {
             data: Array<{
@@ -39,7 +40,7 @@ export class NP {
                 errorPercent: number,
                 error: number
             }>,
-            dataFrame: DataFrame
+            //dataFrame: DataFrame
         },
         attributesSeparated: object,
         univarsMetrics: Array<any>,
@@ -82,22 +83,20 @@ export class NP {
 
     private preProcessData() {
         const typeData: any[] = this.typeDatasService.getTypeDataObject();
-
         this.procesedData = {
             items: {
                 data: this.data,
-                dataFrame: DataFrameFactory(this.data)
+                //dataFrame: DataFrameFactory(this.data)
             },
             attributes: {
                 data: typeData,
-                dataFrame: DataFrameFactory(typeData)
+                // dataFrame: DataFrameFactory(typeData)
             },
             attributesSeparated: this.getAllAtributesUnidimensional(typeData),
             univarsMetrics: [],
             correlations: [],
             notNumberUnique: {}
         }
-
         const uniques = this.getAllUniqueNotNumber(typeData);
         this.procesedData.notNumberUnique = uniques;
         this.typeDatasService.updateTypeNotNumericData(uniques);
@@ -116,9 +115,10 @@ export class NP {
         this.calculateMetrics();
         return this.procesedData.univarsMetrics;
     }
-    
+
 
     getCorrelations(atributes?) {
+        
         this.calculateCorrelations();
         return this.procesedData.correlations;
     }
@@ -130,11 +130,13 @@ export class NP {
     calculateMetrics() {
         if (this.procesedData.univarsMetrics.length == 0) {
             this.procesedData.univarsMetrics = this.univariableMetricsService.calculateMetrics(this.procesedData.attributesSeparated);
+
         }
         return this.procesedData.univarsMetrics;
     }
 
     calculateCorrelations() {
+       
         this.calculateMetrics();
         if (this.procesedData.correlations.length == 0) {
             this.procesedData.correlations = this.correlationsService.getCorrelations(this.procesedData)
@@ -142,15 +144,15 @@ export class NP {
         return this.procesedData.correlations;
     }
 
-    isAtipicalData(attr:string, value:any) {
+    isAtipicalData(attr: string, value: any) {
         this.calculateMetrics();
         const univars = this.procesedData.univarsMetrics;
         const propCurrent = univars.filter(function (item) {
             return item.name === attr;
         });
-        if(
-            propCurrent[0].tukeyminextreme <= value && 
-            propCurrent[0].tukeymaxextreme >= value        
+        if (
+            propCurrent[0].tukeyminextreme <= value &&
+            propCurrent[0].tukeymaxextreme >= value
         ) {
             return false;
         }
@@ -159,16 +161,16 @@ export class NP {
 
     getCorrelation(propA, propB) {
         const corr = this.calculateCorrelations();
-        if(propA === propB) {
+        if (propA === propB) {
             return 1;
         }
         for (let index = 0; index < corr.length; index++) {
-            if(
-                (corr[index].propA === propA && corr[index].propB === propB)  ||
+            if (
+                (corr[index].propA === propA && corr[index].propB === propB) ||
                 (corr[index].propA === propB && corr[index].propB === propA)
             ) {
                 return corr[index].correlation;
-            }            
+            }
         }
         return "NA";
     }
@@ -184,36 +186,38 @@ export class NP {
     }
 
 
+    private getAtributeUnidimensional(typeData, index) {
+        const longitudDatos = this.data.length;
+
+        const errorDataService = this.typeDatasService.errorDataService;
+        const attributes: Array<any> = typeData;
+
+        let arrayProcesed = [];
+        for (let i = 0; i < longitudDatos; i++) {
+            const a = this.data[i];
+            if (!errorDataService.isMissing(a[attributes[index].name])) {
+                if (attributes[index].type === 'Number') {
+                    arrayProcesed.push(parseFloat(a[attributes[index].name]));
+                } else {
+                    arrayProcesed.push(a[attributes[index].name]);
+                }
+            }
+        }
+        return arrayProcesed;
+    }
 
     private getAllAtributesUnidimensional(typeData) {
         const attributes: Array<any> = typeData;
-        const errorDataService = this.typeDatasService.errorDataService;
 
         let values = {};
+        const attributesLength = attributes.length;
 
-        for (let index = 0; index < attributes.length; index++) {
-            const property = attributes[index].name;
-            const type = attributes[index].type;
-            let arrayProcesed = [];
-
-            if (type === 'Number') {
-                this.data.map(a => {
-                    const currentValue = a[property];
-                    if (!errorDataService.isMissing(a[property])) {
-                        arrayProcesed.push(parseFloat(a[property]));
-                    }
-                });
-            } else {
-                this.data.map(a => {
-                    const currentValue = a[property];
-                    if (!errorDataService.isMissing(a[property])) {
-                        arrayProcesed.push(a[property]);
-                    }
-                });
-            }
-            values[property] = {};
-            values[property].items = arrayProcesed;
-            values[property].type = type;
+        for (let index = 0; index < attributesLength; index++) {
+            const arrayProcesed = this.getAtributeUnidimensional(typeData, index);
+            values[attributes[index].name] = {
+                items: arrayProcesed,
+                type: attributes[index].type
+            };
         }
         return values;
     }

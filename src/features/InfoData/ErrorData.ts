@@ -40,7 +40,7 @@ export class ErrorData {
         if(!isNaN(value) && value.length > 0) {
             return false;
         }
-        return this.missingValues.hasOwnProperty(value.toUpperCase());
+       return this.missingValues.hasOwnProperty(value.toUpperCase());
     }
 
     isAtipical(attr:string, value:any) {
@@ -79,3 +79,5 @@ export class ErrorData {
 export function errorDataFactory() {
     return ErrorData.getInstance();
 }
+
+
