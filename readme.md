@@ -2,45 +2,38 @@
 This is a TS project for Machine Learning.
 
 # Compile and init the project.
-
 After clone the project, please execute this commands:
 ```bash
 npm install
 npm run tsc
 ``` 
 
-# Read and save a csv
-
+# Read and save a CSV file.
 ## Read a CSV
 ```javascript
 // Import
-import ReadData from "./features/ReadData/ReadData";
-
+const factories = require("./features/Factories");
 // The path of the csv
 const fileHousePrice = "./../../machine-learning/data/hose-price-test.csv";
-
 // New instance of ReadData object, with the path of the csv and the separator.
-const readData = new ReadData(fileHousePrice, ",");
-
-// Call to loadCsv function, and pass a callback, the callback get for parameter the CSV converted in JSON.
-readData.loadCSV(fileReaded);
-function fileReaded(results: any) {
-    // Do something with the JSON.
-}
+factories.read_csv(fileHousePrice, ",").then(function (results) {
+    // The results are the data in JSON format.
+});
 ```
 ## Save a CSV
-In the previous example, inside the callback fileReaded you can dos modifications and operations with the data obtained by the csv.
-
-After do this modifications you can save in new csv with the function saveCsv, the first parameter is a new array of JSON objects, the second parameter are the name of the new file and the last paramater a callback.
+For convert a JSON to CSV file we can use the save_csv function.
 
 ```javascript
-function fileReaded(results: any) {
-    // Do something with the JSON.
-    readData.saveCSV(results, "results", function () {
-        console.log("FIN");
-    }); 
-}
+const factories = require("./features/Factories");
+
+const jsonObject = {"saludo": "hola"};
+factories.save_csv("./../file", jsonObject);
 ```
+# Methods
+| Metod   | Description                                                                                           | Parameters                                               | Return                                                     |
+| :------ | :---------------------------------------------------------------------------------------------------- | :------------------------------------------------------- | :--------------------------------------------------------- |
+| setData | Set data for do the next operations and calcs. The data is an array of JSON objects with the entities | @param {Array<any>} data the array of json data objects. | @returns {void}                                            |
+| getData | Get the data in JSON format                                                                           |                                                          | @returns {Array<any>} data the array of json data objects. |
 
 
 # Auxiliar Documentation.
