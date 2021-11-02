@@ -1,20 +1,20 @@
-import ReadData from "./features/ReadData/ReadData";
+/*import ReadData from "./features/ReadData/ReadData";
 
 import { ReplaceDataFactory } from "./features/CleanData/ReplaceData"
 const fileHousePrice = "./../../machine-learning/data/hose-price-test.csv";
 const vgSales = "./../../machine-learning/data/vgsales.csv";
 const housing = "./../../machine-learning/data/housing.csv";
 const housingPrice = "./../../machine-learning/data/housing-price/test.csv";
-const housingPriceSubmisions = "./../../machine-learning/data/housing-price/sample_submission.csv";
+const housingPriceSubmisions = "./../../machine-learning/data/housing-price/sample_submission.csv";*/
 //const readData = new ReadData(vgSales, ",");
 import { npFactory } from "./features/Calculus/np"
 
 const fileResult = "./results.csv";
 
 // const readData = new ReadData(housingPrice, ",");
-const readData = new ReadData(fileResult, ",");
+/*const readData = new ReadData(fileResult, ",");
 readData.loadCSV(fileReaded);
-function fileReaded(results: any) {
+function fileReaded(results: any) {*/
     /*const readFileData2 = new ReadData(housingPriceSubmisions, ",").loadCSV(function (resultsSubmisions) {
         const df = npFactory();
         df.mergeJsons(results, resultsSubmisions, "Id");
@@ -32,9 +32,9 @@ function fileReaded(results: any) {
 
 
 
-    const df = npFactory();
+    /*const df = npFactory();
     df.setData(results);
-    df.infoAtributes();
+    df.infoAtributes();*/
 
 
     /* console.log(df.getNumData());
@@ -177,5 +177,5 @@ function fileReaded(results: any) {
 
 
     //console.log(resultData);
-}
+/*}*/
 
